@@ -12,6 +12,17 @@
 
 #define MAX_WAITLIST 5
 
+#define MAX_MESSAGE 100
+
+#define MALLOC(ptr, size) \
+    do { \
+           (ptr) = malloc((size)); \
+           if ((ptr) == NULL) { \
+               perror("malloc"); \
+               exit(1); \
+           } \
+    } while (0)
+
 enum Rank {
     HIGH_CARD,
     PAIR,
@@ -69,5 +80,37 @@ typedef struct table {
  *  - 1 if waitlist is full
  */
 int is_full(Waiting *waiting);
+
+/**
+* Determines if the client is in the waiting list
+*
+* Return:
+*  - 0 if client is not in the waitlist
+*  - 1 if client is in the waitlist
+*/
+int is_waiting(int client_fd, Waiting *waitlist);
+
+/**
+* Determines if the player is at this table
+*
+* Return:
+*  - 0 if player is not at this table
+*  - 1 if player is at this table
+*/
+int is_playing(int client_fd, Table *table);
+
+/**
+* Adds a client to the end of the registering queue
+*
+* Preconditions: The waitlist queue must not be full
+*/
+void add_registering(int client_fd, Waiting **waitlist);
+
+/**
+* Adds the chosen username to the client fd
+*
+* Preconditions: The client fd must be in the waitlist
+*/
+void register_username(char *username, int client_fd, Waiting **waitlist);
 
 #endif //CLI_POKER_POKER_H

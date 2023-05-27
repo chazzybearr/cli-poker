@@ -64,7 +64,7 @@ int main () {
         }
 
         // If the messages comes from the listen socket
-        if (FD_ISSET(listen_soc, &client_fds)) {
+        if (FD_ISSET(listen_soc, &ready_fds)) {
             int client_socket = accept_client(listen_soc);
             if (maxfd - 1 < client_socket) {
                 maxfd = client_socket + 1;
@@ -78,41 +78,65 @@ int main () {
                     perror("write");
                     exit(1);
                 }
+                // Add to fd list
+                FD_SET(client_socket, &client_fds);
+
+                // Add to registering queue
+                add_registering(client_socket, &(table->waiting));
                 continue;
 
             // Kick the client
             } else {
-
+                if (write(client_socket, "Sorry, the server is currently full. Try again later.\r\n", sizeof("Sorry, the server is currently full. Try again later.\r\n")) == -1) {
+                    perror("write");
+                    exit(1);
+                }
             }
-
-
+            continue;
         }
 
-        // Check for space availability
+        // The message comes from a client socket
 
 
 
-        // If the message comes from a client socket
-
-        // If it is not the client's turn, ignore
-
-        // If it is the clients turn
-
-        // Check if move is valid
-
-        // Play the move
-
-        // Check for round over
 
 
-        // Update current player
+            // If it is the clients turn
 
-        // Check for game over
+            // Check if move is valid
 
-        // Update dealer
+            // Play the move
+
+            // Check for round over
 
 
-        // Reset round
+            // Update current player
+
+            // Check for game over
+
+            // Update dealer
+
+
+            // Reset round
+
+        // Not the client's turn
+        int client_fd = fetch_fd(&ready_fds, table);
+
+        // Reading a message
+        int close_sig = 0;
+        char *command = read_command(client_fd, &close_sig);
+        if (close_sig) {
+            // Close client
+            continue;
+        }
+
+        // Case 1: Registering a username
+        if (!is_playing(client_fd, table) && !is_waiting(client_fd, table->waiting)) {
+            register_username(command, client_fd, &(table->waiting));
+        }
+
+        // Case 2: Ignore
+
     }
 
 
