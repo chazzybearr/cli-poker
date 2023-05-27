@@ -10,6 +10,8 @@
 
 #define MAX_PLAYERS 5
 
+#define MAX_WAITLIST 5
+
 enum Rank {
     HIGH_CARD,
     PAIR,
@@ -37,12 +39,35 @@ typedef struct player {
     char username[MAX_USERNAME];
     int money;
     struct hand *hand;
-    Rank rank;
+    enum Rank rank;
+    int client_fd;
+    int folded;
+    int bet_amount;
 } Player;
+
+typedef struct waiting {
+    char username[MAX_USERNAME];
+    int client_fd;
+    int seat;
+    struct waiting *next;
+} Waiting;
 
 typedef struct table {
     struct player players[5];
     struct card comm_cards[5];
+    struct player dealer;
+    struct player current_turn;
+    int num_comm_cards;
+    struct waiting *waiting;
 } Table;
+
+/**
+ * Determines if the waitlist is full
+ *
+ * Return:
+ *  - 0 if waitlist is not full
+ *  - 1 if waitlist is full
+ */
+int is_full(Waiting *waiting);
 
 #endif //CLI_POKER_POKER_H
