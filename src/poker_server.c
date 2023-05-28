@@ -129,13 +129,27 @@ int main () {
             // Close client
             continue;
         }
+        fprintf(stderr, "read %s from %d\n", command, client_fd);
 
         // Case 1: Registering a username
-        if (!is_playing(client_fd, table) && !is_waiting(client_fd, table->waiting)) {
+        if (!is_playing(client_fd, table) && !is_registered(client_fd, table->waiting)) {
+            fprintf(stderr, "REGISTERING USERNAME\n");
             register_username(command, client_fd, &(table->waiting));
+
+            // No game being played
+            if (table->playing == 0) {
+                // Check if a game can be start
+                if (enough_players(table)) {
+                    add_players(table);
+                    start_game(table);
+                    fprintf(stderr, "players list: \n%s\n", list_players(table));
+                }
+            }
+            continue;
         }
 
         // Case 2: Ignore
+        fprintf(stderr, "IGNORE MESSAGE\n");
 
     }
 
