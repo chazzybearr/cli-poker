@@ -14,6 +14,10 @@
 
 #define MAX_MESSAGE 100
 
+#define MAX_READ 100
+
+#define TABLE_TXT "table.txt"
+
 #define MALLOC(ptr, size) \
     do { \
            (ptr) = malloc((size)); \

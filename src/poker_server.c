@@ -51,7 +51,6 @@ int main () {
     // Setting up a table
     Table *table = calloc(1, sizeof(Table));
 
-
     // Main loop
     while (1) {
         // Setting all fds

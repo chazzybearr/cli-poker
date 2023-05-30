@@ -117,3 +117,37 @@ char *read_command(int client_fd, int *close_sig) {
     *close_sig = 1;
     return "";
 }
+
+char *get_file(char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("fopen");
+        exit(1);
+    }
+
+    // Determining the size of the file
+    int size = 0;
+    char buf[MAX_READ];
+    int read;
+
+    while (1) {
+        read = fread(buf, sizeof(char), MAX_READ, file);
+        if (read == 0) {
+            break;
+        }
+        size += read;
+    }
+
+    // Copying contents into buffer
+    fseek(file, 0, SEEK_SET);
+    char *contents = malloc(sizeof(char) * size);
+    while (1) {
+        memset(buf, 0, MAX_READ);                           // This is necessary
+        read = fread(buf, sizeof(char), MAX_READ-1, file);
+        if (read == 0) {
+            break;
+        }
+        strcat(contents, buf);
+    }
+    return contents;
+}

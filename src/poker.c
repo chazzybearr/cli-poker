@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "../include/poker.h"
+#include "../include/poker_game.h"
 
 /**
  * Determines if the waitlist is full
@@ -211,6 +212,10 @@ void send_all(char *message, Table *table) {
 void start_game(Table *table) {
     fprintf(stderr, "game started\n");
     send_all("game started\r\n", table);
+    char *blank_table = get_file(TABLE_TXT);
+    send_all(blank_table, table);
+
+
 }
 
 /**

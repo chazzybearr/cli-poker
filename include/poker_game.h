@@ -32,4 +32,6 @@ int find_network_newline(const char *buf, int n);
  */
 char *read_command(int client_fd, int *close_sig);
 
+char *get_file(char *filename);
+
 #endif //CLI_POKER_POKER_GAME_H
