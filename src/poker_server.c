@@ -50,6 +50,9 @@ int main () {
 
     // Setting up a table
     Table *table = calloc(1, sizeof(Table));
+    add_simulated_players(table);
+
+    fprintf(stderr, "%s", draw_state(table));
 
     // Main loop
     while (1) {

@@ -9,6 +9,33 @@
 #include "../include/poker.h"
 #include "../include/poker_game.h"
 
+void add_simulated_players(Table *table) {
+
+    strcpy(table->players[0].username, "leon");
+    table->players[0].client_fd = 3;
+    table->players[0].folded = 0;
+    table->players[0].bet_amount = 100;
+    table->players[0].money = 1000;
+
+    strcpy(table->players[1].username, "heather");
+    table->players[1].client_fd = 4;
+    table->players[1].folded = 1;
+    table->players[1].bet_amount = 200;
+    table->players[1].money = 289;
+
+    strcpy(table->players[2].username, "lucas");
+    table->players[2].client_fd = 5;
+    table->players[2].folded = 0;
+    table->players[2].bet_amount = 149;
+    table->players[2].money = 345;
+
+    strcpy(table->players[3].username, "jacky");
+    table->players[3].client_fd = 6;
+    table->players[3].folded = 0;
+    table->players[3].bet_amount = 655;
+    table->players[3].money = 3457;
+}
+
 /**
  * Determines if the waitlist is full
  *
@@ -238,4 +265,63 @@ char *list_players(Table *table) {
     }
     strcat(player_list, "\0");
     return player_list;
+}
+
+char *draw_name(char *name, int i, char *table) {
+
+    int length = strlen(name);
+    switch (i) {
+        case 0:
+            memmove(table + 75, name, length);
+            break;
+        case 1:
+            memmove(table + 97, name, length);
+            break;
+        case 2:
+            memmove(table + 1096, name, length);
+            break;
+        case 3:
+            memmove(table + 1117, name, length);
+            break;
+    }
+}
+
+char *draw_money(char *money, int i, char *table) {
+
+    int length = strlen(money);
+    switch (i) {
+        case 0:
+            memmove(table + 143, money, length);
+            break;
+        case 1:
+            memmove(table + 165, money, length);
+            break;
+        case 2:
+            memmove(table + 1164, money, length);
+            break;
+        case 3:
+            memmove(table + 1185, money, length);
+            break;
+    }
+}
+
+char *draw_state(Table *table) {
+    char *blank_table = get_file(TABLE_TXT);
+
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        Player player = table->players[i];
+        char *name = player.username;
+        int money = player.money;
+        int bet_amount = player.bet_amount;
+        int folded = player.folded;
+
+        draw_name(name, i, blank_table);
+
+        char s_money[MAX_MESSAGE];
+        sprintf(s_money, "$%d", money);
+        draw_money(s_money, i, blank_table);
+    }
+
+    return blank_table;
+
 }

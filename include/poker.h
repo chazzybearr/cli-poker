@@ -8,7 +8,7 @@
 #define MIN_USERNAME 4      // 3 character excluding \n
 #define MAX_USERNAME 13     // 12 characters excluding \n
 
-#define MAX_PLAYERS 5
+#define MAX_PLAYERS 4
 
 #define MAX_WAITLIST 5
 
@@ -75,7 +75,10 @@ typedef struct table {
     int num_comm_cards;
     struct waiting *waiting;
     int playing;                    // 0 indicates no game is being played at this table
+    int pot;
 } Table;
+
+void add_simulated_players(Table *table);
 
 /**
  * Determines if the waitlist is full
@@ -150,5 +153,7 @@ void start_game(Table *table);
 * Lists the players in the game, delimited with '\n'
 */
 char *list_players(Table *table);
+char *draw_name(char *name, int i, char *table);
+char *draw_state(Table *table);
 
 #endif //CLI_POKER_POKER_H
